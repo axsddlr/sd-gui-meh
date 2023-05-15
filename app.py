@@ -87,6 +87,11 @@ def create_file_input(row, label_text, browse_func):
     return entry
 
 
+def on_close():
+    # Perform any necessary cleanup here
+    root.destroy()
+
+
 # Create the main window
 root = tk.Tk()
 root.title("Sd-Meh GUI")
@@ -183,5 +188,5 @@ row += 1
 merge_button = ttk.Button(root, text="Merge Models", command=on_merge_click)
 merge_button.grid(column=1, row=row)
 
-# Start the main event loop
+root.protocol("WM_DELETE_WINDOW", on_close)
 root.mainloop()
