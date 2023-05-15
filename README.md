@@ -1,6 +1,6 @@
 # Simple GUI for MEH - Merging Execution Helper
 
-this project is a graphical user interface (GUI) application that simplifies the process of merging multiple machine learning models. The application allows users to merge models with various merge modes and customizable weight configurations.
+This project is a graphical user interface (GUI) application that simplifies the process of merging multiple machine learning models. The application allows users to merge models with various merge modes and customizable weight configurations.
 
 ## Features
 
@@ -21,9 +21,8 @@ this project is a graphical user interface (GUI) application that simplifies the
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/yourusername/meh.git
+   git clone https://github.com/axsddlr/sd-gui-meh.git
    cd meh
-
    ```
 
 2. Create a virtual environment and install dependencies:
@@ -32,7 +31,6 @@ this project is a graphical user interface (GUI) application that simplifies the
    python -m venv .venv
    source .venv/bin/activate  # or ".venv\Scripts\activate" on Windows
    pip install -r requirements.txt
-
    ```
 
 3. Run the application:
@@ -49,6 +47,8 @@ this project is a graphical user interface (GUI) application that simplifies the
 4. Input the weight alpha, weight beta, base alpha, and base beta values in their respective fields.
 5. Click the "Merge Models" button to merge the models.
 6. Save the merged model by choosing a filename and location in the save dialog that appears.
+
+<mark>if you have experience with supermerger extension in automatic1111, the first leading number in weights alpha will be the base alpha integer.</mark>
 
 ## Contributing
 
