@@ -13,15 +13,6 @@ def browse_model(entry):
     entry.insert(0, file_path)
 
 
-def browse_output(entry):
-    folder_path = filedialog.askdirectory()
-    if not os.access(folder_path, os.W_OK):
-        messagebox.showerror("Error", f"Cannot write to the folder: {folder_path}")
-        return
-    entry.delete(0, tk.END)
-    entry.insert(0, folder_path)
-
-
 def compute_weights(weights, base):
     if not weights:
         return [base] * NUM_TOTAL_BLOCKS
@@ -87,16 +78,33 @@ def create_file_input(row, label_text, browse_func):
     return entry
 
 
+def browse_output(entry):
+    file_path = filedialog.asksaveasfilename()
+    if not file_path:
+        return
+    if not os.access(os.path.dirname(file_path), os.W_OK):
+        messagebox.showerror(
+            "Error", f"Cannot write to the folder: {os.path.dirname(file_path)}"
+        )
+        return
+    entry.delete(0, tk.END)
+    entry.insert(0, file_path)
+
+
 def on_close():
     # Perform any necessary cleanup here
     root.destroy()
+
+
+def show_version_info():
+    version = "1.0.0"  # Replace with your application's version number
+    messagebox.showinfo("Version Info", f"Application Version: {version}")
 
 
 # Create the main window
 root = tk.Tk()
 root.title("Sd-Meh GUI")
 root.resizable(False, False)  # Disable resizing the window
-root.attributes("-toolwindow", True)  # Remove the maximize button
 
 # Add input fields, labels, and other widgets
 row = 0
@@ -139,9 +147,8 @@ precision_combobox.current(0)
 
 row += 1
 
-output_path_label = ttk.Label(root, text="Output Folder")
-output_path_label.grid(column=0, row=row)
-output_path_entry = create_file_input(row, "Output Folder", browse_output)
+output_path_entry = create_file_input(row, "Output File", browse_output)
+
 row += 1
 
 output_format_label = ttk.Label(root, text="Output Format")
@@ -185,8 +192,15 @@ base_beta_entry.insert(0, "0.0")
 
 row += 1
 
-merge_button = ttk.Button(root, text="Merge Models", command=on_merge_click)
-merge_button.grid(column=1, row=row)
+buttons_frame = ttk.Frame(root)
+buttons_frame.grid(column=0, row=row, columnspan=3)
+
+version_button = ttk.Button(buttons_frame, text="?", command=show_version_info, width=3)
+version_button.pack(side="left", padx=(0, 0))
+
+merge_button = ttk.Button(buttons_frame, text="Merge Models", command=on_merge_click)
+merge_button.pack(side="left")
+
 
 root.protocol("WM_DELETE_WINDOW", on_close)
 root.mainloop()
