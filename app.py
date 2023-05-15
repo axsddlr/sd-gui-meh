@@ -89,7 +89,9 @@ def create_file_input(row, label_text, browse_func):
 
 # Create the main window
 root = tk.Tk()
-root.title("Stable Diffusion Model Merging")
+root.title("Sd-Meh GUI")
+root.resizable(False, False)  # Disable resizing the window
+root.attributes("-toolwindow", True)  # Remove the maximize button
 
 # Add input fields, labels, and other widgets
 row = 0
