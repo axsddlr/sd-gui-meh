@@ -13,6 +13,15 @@ def browse_model(entry):
     entry.insert(0, file_path)
 
 
+def browse_output(entry):
+    folder_path = filedialog.askdirectory()
+    if not os.access(folder_path, os.W_OK):
+        messagebox.showerror("Error", f"Cannot write to the folder: {folder_path}")
+        return
+    entry.delete(0, tk.END)
+    entry.insert(0, folder_path)
+
+
 def compute_weights(weights, base):
     if not weights:
         return [base] * NUM_TOTAL_BLOCKS
@@ -68,12 +77,12 @@ def on_merge_click():
     messagebox.showinfo("Success", "Models merged successfully!")
 
 
-def create_file_input(row, label_text):
+def create_file_input(row, label_text, browse_func):
     label = ttk.Label(root, text=label_text)
     label.grid(column=0, row=row)
     entry = ttk.Entry(root)
     entry.grid(column=1, row=row)
-    browse_button = ttk.Button(root, text="Browse", command=lambda: browse_model(entry))
+    browse_button = ttk.Button(root, text="Browse", command=lambda: browse_func(entry))
     browse_button.grid(column=2, row=row)
     return entry
 
@@ -85,13 +94,13 @@ root.title("Stable Diffusion Model Merging")
 # Add input fields, labels, and other widgets
 row = 0
 
-model_a_entry = create_file_input(row, "Model A")
+model_a_entry = create_file_input(row, "Model A", browse_model)
 row += 1
 
-model_b_entry = create_file_input(row, "Model B")
+model_b_entry = create_file_input(row, "Model B", browse_model)
 row += 1
 
-model_c_entry = create_file_input(row, "Model C (optional)")
+model_c_entry = create_file_input(row, "Model C", browse_model)
 row += 1
 
 merging_method_label = ttk.Label(root, text="Merging Method")
@@ -123,12 +132,9 @@ precision_combobox.current(0)
 
 row += 1
 
-output_path_label = ttk.Label(root, text="Output Path")
+output_path_label = ttk.Label(root, text="Output Folder")
 output_path_label.grid(column=0, row=row)
-output_path_entry = ttk.Entry(root)
-output_path_entry.grid(column=1, row=row)
-output_path_entry.insert(0, "model_out")
-
+output_path_entry = create_file_input(row, "Output Folder", browse_output)
 row += 1
 
 output_format_label = ttk.Label(root, text="Output Format")
