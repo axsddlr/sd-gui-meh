@@ -180,6 +180,7 @@ weights_alpha_label = ttk.Label(root, text="Weights Alpha")
 weights_alpha_label.grid(column=0, row=row)
 weights_alpha_entry = ttk.Entry(root)
 weights_alpha_entry.grid(column=1, row=row)
+weights_alpha_entry.bind("<Button-3>", show_context_menu)
 
 row += 1
 
@@ -188,6 +189,7 @@ base_alpha_label.grid(column=0, row=row)
 base_alpha_entry = ttk.Entry(root)
 base_alpha_entry.grid(column=1, row=row)
 base_alpha_entry.insert(0, "0.0")
+base_alpha_entry.bind("<Button-3>", show_context_menu)
 
 row += 1
 
@@ -195,6 +197,7 @@ weights_beta_label = ttk.Label(root, text="Weights Beta")
 weights_beta_label.grid(column=0, row=row)
 weights_beta_entry = ttk.Entry(root)
 weights_beta_entry.grid(column=1, row=row)
+weights_beta_entry.bind("<Button-3>", show_context_menu)
 
 row += 1
 
@@ -203,6 +206,7 @@ base_beta_label.grid(column=0, row=row)
 base_beta_entry = ttk.Entry(root)
 base_beta_entry.grid(column=1, row=row)
 base_beta_entry.insert(0, "0.0")
+base_beta_entry.bind("<Button-3>", show_context_menu)
 
 row += 1
 
