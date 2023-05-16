@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from sd_meh.merge import NUM_TOTAL_BLOCKS, merge_models, save_model
 import os
+import json
 
 
 class Config:
@@ -17,8 +18,39 @@ class Config:
         self.precisions = [16, 32]
         self.output_formats = ["safetensors", "ckpt"]
 
+        # Set default indices
+        self.merging_method_index = 0
+        self.precision_index = 0
+        self.output_format_index = 0
+
+    def load_settings(self, file_path):
+        try:
+            with open(file_path, "r") as f:
+                settings = json.load(f)
+                # Load the settings into the config instance
+                for key, value in settings.items():
+                    setattr(self, key, value)
+        except FileNotFoundError:
+            # If the settings file doesn't exist, use default values
+            pass
+        except Exception as e:
+            messagebox.showerror("Error", f"Error loading settings: {e}")
+
+    def save_settings(self, file_path):
+        settings = {
+            "merging_method_index": merging_method_combobox.current(),
+            "precision_index": precision_combobox.current(),
+            "output_format_index": output_format_combobox.current(),
+        }
+        try:
+            with open(file_path, "w") as f:
+                json.dump(settings, f, indent=4)
+        except Exception as e:
+            messagebox.showerror("Error", f"Error saving settings: {e}")
+
 
 config = Config()
+config.load_settings("settings.json")
 
 
 def browse_model(entry):
@@ -126,6 +158,7 @@ def browse_output(entry):
 
 def on_close():
     # Perform any necessary cleanup here
+    config.save_settings("settings.json")
     root.destroy()
 
 
@@ -199,6 +232,11 @@ output_format_combobox = ttk.Combobox(
 )
 output_format_combobox.grid(column=1, row=row)
 output_format_combobox.current(0)
+
+# Set the initial values for the dropdowns based on the loaded settings
+merging_method_combobox.current(config.merging_method_index)
+precision_combobox.current(config.precision_index)
+output_format_combobox.current(config.output_format_index)
 
 row += 1
 
