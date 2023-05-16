@@ -4,6 +4,23 @@ from sd_meh.merge import NUM_TOTAL_BLOCKS, merge_models, save_model
 import os
 
 
+class Config:
+    def __init__(self):
+        self.merging_methods = [
+            "weighted_sum",
+            "add_difference",
+            "weighted_subtraction",
+            "sum_twice",
+            "triple_sum",
+            "tensor_sum",
+        ]
+        self.precisions = [16, 32]
+        self.output_formats = ["safetensors", "ckpt"]
+
+
+config = Config()
+
+
 def browse_model(entry):
     file_path = filedialog.askopenfilename()
     if not os.access(file_path, os.R_OK):
@@ -152,14 +169,7 @@ merging_method_var = tk.StringVar()
 merging_method_combobox = ttk.Combobox(
     root,
     textvariable=merging_method_var,
-    values=[
-        "weighted_sum",
-        "add_difference",
-        "weighted_subtraction",
-        "sum_twice",
-        "triple_sum",
-        "tensor_sum",
-    ],
+    values=config.merging_methods,
 )
 merging_method_combobox.grid(column=1, row=row)
 merging_method_combobox.current(0)
@@ -169,7 +179,9 @@ row += 1
 precision_label = ttk.Label(root, text="Precision")
 precision_label.grid(column=0, row=row)
 precision_var = tk.IntVar(value=16)
-precision_combobox = ttk.Combobox(root, textvariable=precision_var, values=[16, 32])
+precision_combobox = ttk.Combobox(
+    root, textvariable=precision_var, values=config.precisions
+)
 precision_combobox.grid(column=1, row=row)
 precision_combobox.current(0)
 
@@ -183,7 +195,7 @@ output_format_label = ttk.Label(root, text="Output Format")
 output_format_label.grid(column=0, row=row)
 output_format_var = tk.StringVar()
 output_format_combobox = ttk.Combobox(
-    root, textvariable=output_format_var, values=["safetensors", "ckpt"]
+    root, textvariable=output_format_var, values=config.output_formats
 )
 output_format_combobox.grid(column=1, row=row)
 output_format_combobox.current(0)
