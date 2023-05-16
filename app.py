@@ -68,11 +68,13 @@ def on_merge_click():
     messagebox.showinfo("Success", "Models merged successfully!")
 
 
-def create_file_input(row, label_text, browse_func):
+def create_file_input(row, label_text, browse_func, bind_right_click=True):
     label = ttk.Label(root, text=label_text)
     label.grid(column=0, row=row)
     entry = ttk.Entry(root)
     entry.grid(column=1, row=row)
+    if bind_right_click:
+        entry.bind("<Button-3>", show_context_menu)  # Bind right-click event
     browse_button = ttk.Button(root, text="Browse", command=lambda: browse_func(entry))
     browse_button.grid(column=2, row=row)
     return entry
@@ -99,6 +101,18 @@ def on_close():
 def show_version_info():
     version = "1.0.0"  # Replace with your application's version number
     messagebox.showinfo("Version Info", f"Application Version: {version}")
+
+
+def show_context_menu(event):
+    widget = event.widget
+    context_menu = tk.Menu(root, tearoff=0)
+    context_menu.add_command(
+        label="Copy", command=lambda: widget.event_generate("<<Copy>>")
+    )
+    context_menu.add_command(
+        label="Paste", command=lambda: widget.event_generate("<<Paste>>")
+    )
+    context_menu.tk.call("tk_popup", context_menu, event.x_root, event.y_root)
 
 
 # Create the main window
