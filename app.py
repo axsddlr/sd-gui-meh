@@ -13,15 +13,6 @@ def browse_model(entry):
     entry.insert(0, file_path)
 
 
-def compute_weights(weights, base):
-    if not weights:
-        return [base] * NUM_TOTAL_BLOCKS
-    if "," in weights:
-        w_alpha = list(map(float, weights.split(",")))
-        if len(w_alpha) == NUM_TOTAL_BLOCKS:
-            return w_alpha
-
-
 def on_merge_click():
     # Read values from input fields
     model_a = model_a_entry.get()
@@ -35,6 +26,14 @@ def on_merge_click():
     base_alpha = float(base_alpha_entry.get())
     weights_beta = weights_beta_entry.get()
     base_beta = float(base_beta_entry.get())
+
+    def compute_weights(weights, base):
+        if not weights:
+            return [base] * NUM_TOTAL_BLOCKS
+        if "," in weights:
+            w_alpha = list(map(float, weights.split(",")))
+            if len(w_alpha) == NUM_TOTAL_BLOCKS:
+                return w_alpha
 
     # Check if the lengths of weights_alpha and weights_beta are equal to NUM_TOTAL_BLOCKS
     if "," in weights_alpha and len(weights_alpha.split(",")) != NUM_TOTAL_BLOCKS:
