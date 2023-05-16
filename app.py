@@ -31,8 +31,8 @@ class Config:
                 for key, value in settings.items():
                     setattr(self, key, value)
         except FileNotFoundError:
-            # If the settings file doesn't exist, use default values
-            pass
+            # If the settings file doesn't exist, create a default one
+            self.save_settings(file_path)
         except Exception as e:
             messagebox.showerror("Error", f"Error loading settings: {e}")
 
