@@ -36,6 +36,21 @@ def on_merge_click():
     weights_beta = weights_beta_entry.get()
     base_beta = float(base_beta_entry.get())
 
+    # Check if the lengths of weights_alpha and weights_beta are equal to NUM_TOTAL_BLOCKS
+    if "," in weights_alpha and len(weights_alpha.split(",")) != NUM_TOTAL_BLOCKS:
+        messagebox.showerror(
+            "Error",
+            f"The weights must be {NUM_TOTAL_BLOCKS} in total, you have {len(weights_alpha.split(','))} for weights_alpha.",
+        )
+        return
+
+    if "," in weights_beta and len(weights_beta.split(",")) != NUM_TOTAL_BLOCKS:
+        messagebox.showerror(
+            "Error",
+            f"The weights must be {NUM_TOTAL_BLOCKS} in total, you have {len(weights_beta.split(','))} for weights_beta.",
+        )
+        return
+
     if not model_a or not model_b:
         messagebox.showerror("Error", "Please provide paths for Model A and Model B.")
         return
