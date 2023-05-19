@@ -115,14 +115,22 @@ def on_merge_click():
     if merge_mode == "add_difference":
         models["model_c"] = model_c
 
+    weights = {
+        "alpha": compute_weights(weights_alpha, base_alpha),
+    }
+    bases = {
+        "alpha": base_alpha,
+    }
+
+    if merge_mode in ["weighted_subtraction", "tensor_sum", "sum_twice", "triple_sum"]:
+        weights["beta"] = compute_weights(weights_beta, base_beta)
+        bases["beta"] = base_beta
+
     # Call the modified main function with the appropriate arguments
     merged_model = merge_models(
         models=models,  # Use the updated models dictionary
-        weights={
-            "alpha": compute_weights(weights_alpha, base_alpha),
-            "beta": compute_weights(weights_beta, base_beta),
-        },
-        bases={"alpha": base_alpha, "beta": base_beta},
+        weights=weights,
+        bases=bases,
         merge_mode=merge_mode,
         precision=precision,
     )
