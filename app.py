@@ -171,7 +171,7 @@ def on_close():
 
 
 def show_version_info():
-    version = "1.0.0"  # Replace with your application's version number
+    version = "1.0.1"  # Replace with your application's version number
     messagebox.showinfo("Version Info", f"Application Version: {version}")
 
 
