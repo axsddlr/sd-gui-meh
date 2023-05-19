@@ -2,6 +2,10 @@
 
 This project is a graphical user interface (GUI) application that simplifies the process of merging multiple machine learning models. The application allows users to merge models with various merge modes and customizable weight configurations.
 
+<p align="center">
+<img src="https://github.com/axsddlr/sd-gui-meh/blob/master/sd_meh_gui.png?raw=true"/>
+</p>
+
 ## Features
 
 - Graphical interface for easy model selection and merging
