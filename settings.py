@@ -19,6 +19,7 @@ class Config:
         self.merging_method_index = 0
         self.precision_index = 0
         self.output_format_index = 0
+        self.enable_log = False
 
     def load_settings(self, file_path):
         try:

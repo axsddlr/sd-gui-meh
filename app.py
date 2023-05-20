@@ -183,6 +183,7 @@ def on_close():
         "merging_method_index": merging_method_combobox.current(),
         "precision_index": precision_combobox.current(),
         "output_format_index": output_format_combobox.current(),
+        "enable_log": log_var.get(),  # Save the log setting
     }
     config.save_settings("settings.json", settings)
     root.destroy()
@@ -318,6 +319,7 @@ notebook.add(settings_frame, text="Settings")  # Add settings frame to the noteb
 # Add Settings Tab Widgets
 log_var = tk.BooleanVar()
 log_checkbox = ttk.Checkbutton(settings_frame, text="Enable Log", variable=log_var)
+log_var.set(config.enable_log)
 log_checkbox.pack()
 
 about = About()
