@@ -1,4 +1,33 @@
-.venv/
 .env
 .vscode/
 settings.json
+
+# Python
+*.pyc
+*.pyo
+__pycache__/
+venv/
+env/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environment
+.venv/
+pip-selfcheck.json
+
+# VSCode
+.vscode/
+.settings/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Miscellaneous
+*.log
+*.swp
+.DS_Store
