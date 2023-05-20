@@ -21,11 +21,27 @@ def browse_model(entry):
     entry.insert(0, file_path)
 
 
-def log_to_csv(params):
-    # Use 'a' to append to existing file, create if file does not exist
-    with open("merge_log.csv", "a", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow([datetime.datetime.now(), *params])
+def write_to_csv(row, filename="merge_log.csv"):
+    file_exists = os.path.isfile(filename)
+    with open(filename, "a", newline="") as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            header = [
+                "Timestamp",
+                "Model A",
+                "Model B",
+                "Model C",
+                "Merging Method",
+                "Precision",
+                "Output Path",
+                "Output Format",
+                "Weights",
+                "Bases",
+                "Success",
+                "Error",
+            ]
+            writer.writerow(header)
+        writer.writerow(row)
 
 
 def on_merge_click():
@@ -105,28 +121,33 @@ def on_merge_click():
             precision=precision,
         )
         save_model(merged_model, output_path, output_format)
+        success = True
+        error_message = ""
 
     except Exception as e:
+        success = False
+        error_message = str(e)
         messagebox.showerror("Error", f"An error occurred during merging: {e}")
     else:
         messagebox.showinfo("Success", "Merging completed successfully!")
-        # Save to CSV if checkbox is selected
-        if log_var.get():
-            with open("merge_log.csv", "a", newline="") as file:
-                writer = csv.writer(file)
-                writer.writerow(
-                    [
-                        model_a,
-                        model_b,
-                        model_c,
-                        merge_mode,
-                        precision,
-                        output_path,
-                        output_format,
-                        weights,
-                        bases,
-                    ]
-                )
+
+    # Save to CSV if checkbox is selected
+    if log_var.get():
+        row = [
+            datetime.datetime.now(),
+            model_a,
+            model_b,
+            model_c,
+            merge_mode,
+            precision,
+            output_path,
+            output_format,
+            weights,
+            bases,
+            success,
+            error_message,
+        ]
+        write_to_csv(row)
 
 
 def create_file_input(row, label_text, browse_func, master, bind_right_click=True):
@@ -290,6 +311,14 @@ buttons_frame.grid(column=0, row=row, columnspan=3, pady=(10, 0))
 
 merge_button = ttk.Button(buttons_frame, text="Merge Models", command=on_merge_click)
 merge_button.pack(side="left", padx=(10, 0))
+
+settings_frame = ttk.Frame(notebook)  # Create settings frame
+notebook.add(settings_frame, text="Settings")  # Add settings frame to the notebook
+
+# Add Settings Tab Widgets
+log_var = tk.BooleanVar()
+log_checkbox = ttk.Checkbutton(settings_frame, text="Enable Log", variable=log_var)
+log_checkbox.pack()
 
 about = About()
 about_frame = about.create_about_frame(notebook)
