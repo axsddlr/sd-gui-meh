@@ -4,6 +4,8 @@ from sd_meh.merge import NUM_TOTAL_BLOCKS, merge_models, save_model
 from settings import Config
 from about import About
 import os
+import csv
+import datetime
 
 
 config = Config()
@@ -17,6 +19,13 @@ def browse_model(entry):
         return
     entry.delete(0, tk.END)
     entry.insert(0, file_path)
+
+
+def log_to_csv(params):
+    # Use 'a' to append to existing file, create if file does not exist
+    with open("merge_log.csv", "a", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([datetime.datetime.now(), *params])
 
 
 def on_merge_click():
@@ -83,17 +92,41 @@ def on_merge_click():
         weights["beta"] = compute_weights(weights_beta, base_beta)
         bases["beta"] = base_beta
 
-    # Call the modified main function with the appropriate arguments
-    merged_model = merge_models(
-        models=models,  # Use the updated models dictionary
-        weights=weights,
-        bases=bases,
-        merge_mode=merge_mode,
-        precision=precision,
-    )
-    save_model(merged_model, output_path, output_format)
+    if output_format not in config.output_formats:
+        messagebox.showerror("Error", f"Output format not supported: {output_format}")
+        return
+    try:
+        # Call the modified main function with the appropriate arguments
+        merged_model = merge_models(
+            models=models,  # Use the updated models dictionary
+            weights=weights,
+            bases=bases,
+            merge_mode=merge_mode,
+            precision=precision,
+        )
+        save_model(merged_model, output_path, output_format)
 
-    messagebox.showinfo("Success", "Models merged successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred during merging: {e}")
+    else:
+        messagebox.showinfo("Success", "Merging completed successfully!")
+        # Save to CSV if checkbox is selected
+        if log_var.get():
+            with open("merge_log.csv", "a", newline="") as file:
+                writer = csv.writer(file)
+                writer.writerow(
+                    [
+                        model_a,
+                        model_b,
+                        model_c,
+                        merge_mode,
+                        precision,
+                        output_path,
+                        output_format,
+                        weights,
+                        bases,
+                    ]
+                )
 
 
 def create_file_input(row, label_text, browse_func, master, bind_right_click=True):
