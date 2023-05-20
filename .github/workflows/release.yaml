@@ -1,3 +1,5 @@
+# https://docs.github.com/en/actions
+
 name: "Release"
 
 on: # yamllint disable-line rule:truthy
@@ -15,28 +17,6 @@ jobs:
       - name: "Determine tag"
         run: 'echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV'
 
-      - name: "Get last tag"
-        id: "lasttag"
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-        with:
-          fallback: "0.0.0"
-
-      - name: "Fetch commits"
-        id: "commits"
-        uses: "actions/github-script@v6"
-        with:
-          github-token: "${{ secrets.RELEASE_TOKEN }}"
-          script: |
-            const comparison = await github.rest.repos.compareCommits({
-              base: "${{ steps.lasttag.outputs.tag }}",
-              head: process.env.RELEASE_TAG,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
-
-            const commitList = comparison.data.commits.map(commit => commit.sha + ": " + commit.commit.message).join("\n");
-            return commitList;
-
       - name: "Create release"
         uses: "actions/github-script@v6"
         with:
@@ -45,12 +25,12 @@ jobs:
             try {
               const response = await github.rest.repos.createRelease({
                 draft: false,
+                generate_release_notes: true,
                 name: process.env.RELEASE_TAG,
                 owner: context.repo.owner,
                 prerelease: false,
                 repo: context.repo.repo,
                 tag_name: process.env.RELEASE_TAG,
-                body: "${{ steps.commits.outputs.result }}"
               });
 
               core.exportVariable('RELEASE_ID', response.data.id);
