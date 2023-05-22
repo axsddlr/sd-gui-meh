@@ -66,20 +66,19 @@ def on_merge_click():
             if len(w_alpha) == NUM_TOTAL_BLOCKS:
                 return w_alpha
 
-    # Check if the lengths of weights_alpha and weights_beta are equal to NUM_TOTAL_BLOCKS
-    if "," in weights_alpha and len(weights_alpha.split(",")) != NUM_TOTAL_BLOCKS:
-        messagebox.showerror(
-            "Error",
-            f"The weights must be {NUM_TOTAL_BLOCKS} in total, you have {len(weights_alpha.split(','))} for weights_alpha.",
-        )
-        return
+    if "," in weights_alpha:
+        w_alpha = weights_alpha.split(",")
+        if len(w_alpha) > 25:
+            base_alpha = float(w_alpha[0])
+            base_alpha_entry.delete(0, tk.END)  # delete current value in entry
+            base_alpha_entry.insert(0, str(base_alpha))  # insert new value
 
-    if "," in weights_beta and len(weights_beta.split(",")) != NUM_TOTAL_BLOCKS:
-        messagebox.showerror(
-            "Error",
-            f"The weights must be {NUM_TOTAL_BLOCKS} in total, you have {len(weights_beta.split(','))} for weights_beta.",
-        )
-        return
+    if "," in weights_beta:
+        w_beta = weights_beta.split(",")
+        if len(w_beta) > 25:
+            base_beta = float(w_beta[0])
+            base_beta_entry.delete(0, tk.END)  # delete current value in entry
+            base_beta_entry.insert(0, str(base_beta))  # insert new value
 
     if not model_a or not model_b:
         messagebox.showerror("Error", "Please provide paths for Model A and Model B.")
