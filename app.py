@@ -57,6 +57,7 @@ def on_merge_click():
     base_alpha = float(base_alpha_entry.get())
     weights_beta = weights_beta_entry.get()
     base_beta = float(base_beta_entry.get())
+    weights_clip = float(weights_clip_entry.get()) if weights_clip_entry.get() else None
 
     def compute_weights(weights, base):
         if not weights:
@@ -119,6 +120,7 @@ def on_merge_click():
             bases=bases,
             merge_mode=merge_mode,
             precision=precision,
+            weights_clip=weights_clip,
         )
         save_model(merged_model, output_path, output_format)
         success = True
@@ -304,6 +306,14 @@ base_beta_entry = ttk.Entry(grid_frame)
 base_beta_entry.grid(column=1, row=row, padx=(0, 10))
 base_beta_entry.insert(0, "0.0")
 base_beta_entry.bind("<Button-3>", show_context_menu)
+
+row += 1
+
+weights_clip_label = ttk.Label(grid_frame, text="Weights Clip")
+weights_clip_label.grid(column=0, row=row, padx=(10, 0))
+weights_clip_entry = ttk.Entry(grid_frame)
+weights_clip_entry.grid(column=1, row=row, padx=(0, 10))
+weights_clip_entry.bind("<Button-3>", show_context_menu)
 
 row += 1
 
