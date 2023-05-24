@@ -37,6 +37,7 @@ def write_to_csv(row, filename="merge_log.csv"):
                 "Output Format",
                 "Weights",
                 "Bases",
+                "Weights Clipping",  # added this line for weights_clip
                 "Success",
                 "Error",
             ]
@@ -57,7 +58,6 @@ def on_merge_click():
     base_alpha = float(base_alpha_entry.get())
     weights_beta = weights_beta_entry.get()
     base_beta = float(base_beta_entry.get())
-    weights_clip = float(weights_clip_entry.get()) if weights_clip_entry.get() else None
 
     def compute_weights(weights, base):
         if not weights:
@@ -120,7 +120,7 @@ def on_merge_click():
             bases=bases,
             merge_mode=merge_mode,
             precision=precision,
-            weights_clip=weights_clip,
+            weights_clip=weights_clip_var.get(),
         )
         save_model(merged_model, output_path, output_format)
         success = True
@@ -146,6 +146,7 @@ def on_merge_click():
             output_format,
             weights,
             bases,
+            weights_clip_var.get(),
             success,
             error_message,
         ]
@@ -186,6 +187,7 @@ def on_close():
         "precision_index": precision_combobox.current(),
         "output_format_index": output_format_combobox.current(),
         "enable_log": log_var.get(),  # Save the log setting
+        "enable_weights_clip": weights_clip_var.get(),
     }
     config.save_settings("settings.json", settings)
     root.destroy()
@@ -309,14 +311,6 @@ base_beta_entry.bind("<Button-3>", show_context_menu)
 
 row += 1
 
-weights_clip_label = ttk.Label(grid_frame, text="Weights Clip")
-weights_clip_label.grid(column=0, row=row, padx=(10, 0))
-weights_clip_entry = ttk.Entry(grid_frame)
-weights_clip_entry.grid(column=1, row=row, padx=(0, 10))
-weights_clip_entry.bind("<Button-3>", show_context_menu)
-
-row += 1
-
 buttons_frame = ttk.Frame(grid_frame)
 buttons_frame.grid(column=0, row=row, columnspan=3, pady=(10, 0))
 
@@ -331,6 +325,18 @@ log_var = tk.BooleanVar()
 log_checkbox = ttk.Checkbutton(settings_frame, text="Enable Log", variable=log_var)
 log_var.set(config.enable_log)
 log_checkbox.pack()
+
+weights_clip_var = tk.BooleanVar()
+weights_clip_var.set(config.enable_weights_clip)
+weights_clip_checkbox = ttk.Checkbutton(
+    settings_frame,
+    text="Enable Weights Clipping",
+    variable=weights_clip_var,
+    onvalue=True,
+    offvalue=False,
+)
+weights_clip_checkbox.pack()
+
 
 about = About()
 about_frame = about.create_about_frame(notebook)

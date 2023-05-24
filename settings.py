@@ -20,6 +20,7 @@ class Config:
         self.precision_index = 0
         self.output_format_index = 0
         self.enable_log = False
+        self.enable_weights_clip = False
 
     def load_settings(self, file_path):
         try:
@@ -34,7 +35,15 @@ class Config:
         except Exception as e:
             messagebox.showerror("Error", f"Error loading settings: {e}")
 
-    def save_settings(self, file_path, settings):
+    def save_settings(self, file_path, settings=None):
+        if settings is None:
+            settings = {
+                "merging_method_index": self.merging_method_index,
+                "precision_index": self.precision_index,
+                "output_format_index": self.output_format_index,
+                "enable_log": self.enable_log,
+                "enable_weights_clip": self.enable_weights_clip,
+            }
         try:
             with open(file_path, "w") as f:
                 json.dump(settings, f, indent=4)
