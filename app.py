@@ -122,16 +122,23 @@ def on_merge_click():
             precision=precision,
             weights_clip=weights_clip_var.get(),
         )
-        save_model(merged_model, output_path, output_format)
-        success = True
-        error_message = ""
-
     except Exception as e:
         success = False
         error_message = str(e)
         messagebox.showerror("Error", f"An error occurred during merging: {e}")
-    else:
-        messagebox.showinfo("Success", "Merging completed successfully!")
+        return
+
+    try:
+        save_model(merged_model, output_path, output_format)
+    except Exception as e:
+        success = False
+        error_message = str(e)
+        messagebox.showerror("Error", f"An error occurred during saving the model: {e}")
+        return
+
+    success = True
+    error_message = ""
+    messagebox.showinfo("Success", "Merging completed successfully!")
 
     # Save to CSV if checkbox is selected
     if log_var.get():
