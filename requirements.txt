@@ -10,5 +10,5 @@ safetensors==0.3.2
 sd-meh==0.9.4
 sympy==1.12
 torch==2.0.1
-tqdm==4.65.0
+tqdm==4.66.1
 typing_extensions==4.7.1
